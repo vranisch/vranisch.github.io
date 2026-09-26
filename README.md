@@ -1,6 +1,6 @@
 # Vranis Christos website
 
-Static website with invitation-only email/password accounts powered by Supabase Auth.
+Static website with owner-created username/password accounts (and existing email accounts) powered by Supabase Auth.
 
 ## Enable accounts
 
@@ -13,6 +13,14 @@ Static website with invitation-only email/password accounts powered by Supabase 
 
 Accounts remain visibly unavailable until credentials are configured. Users are managed in Supabase → Authentication → Users; no custom database table is required.
 
+## Create a username account
+
+1. Choose 3–32 lowercase ASCII letters, digits or underscores, e.g. `testuser`.
+2. In Supabase → Authentication → Users → Add user → Create new user, enter `testuser@users.vranisch.github.io`, choose a strong password and enable **Auto Confirm User**.
+3. Give the user their username (`testuser`) and initial password privately. On the site they enter only the username and password. They can change the password after signing in.
+
+The email-shaped identifier is internal, not a mailbox. Do not send invitations or recovery emails to it. Forgotten passwords for these accounts require an administrator reset through Supabase's server-side Admin API or management tools. Never expose an admin key in the site. Existing real-email accounts can still sign in and recover passwords using email; their email local part is not automatically a username. Usernames are case-insensitive. Public signup must remain disabled.
+
 ## Local preview
 
 Run `python3 -m http.server 8000` and visit `http://localhost:8000`.
@@ -20,7 +28,8 @@ Run `python3 -m http.server 8000` and visit `http://localhost:8000`.
 ## Verify with a configured project
 
 - Check `/auth/v1/settings` returns `disable_signup: true` before publishing.
-- In Authentication → Users → Add user → Send invitation, invite an email you control. Follow the invite link, set a password on the account page, sign out, and sign in again.
+- Create a username account as above and verify sign-in, case-insensitive username handling, and password changes.
+- For a real-email account, in Authentication → Users → Add user → Send invitation, invite an email you control. Follow the invite link, set a password on the account page, sign out, and sign in again.
 - Review any users created before public signup was disabled; disabling signup does not remove existing accounts.
 - Refresh and navigate between pages; the header should say “My account”.
 - Sign out and verify the guest form returns; check incorrect credentials show an error.

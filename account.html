@@ -14,7 +14,7 @@
   <header class="p-3 d-flex justify-content-between"><span>Vranis Christos</span><a class="text-white" href="homepage.html">Home</a></header>
   <main>
     <h1 class="h3">Your account</h1>
-    <p>Accounts are available by invitation only. Contact the site owner to request access.</p>
+    <p>Accounts are created by the site owner. Contact the site owner to request access.</p>
     <p id="auth-status" role="status" aria-live="polite">Loading…</p>
     <div id="guest" hidden>
       <div class="d-flex gap-2 mb-4" aria-label="Account actions">
@@ -22,11 +22,12 @@
       </div>
       <h2 id="form-title" class="h5">Sign in</h2>
       <form id="auth-form">
-        <div class="mb-3"><label class="form-label" for="email">Email</label><input class="form-control" type="email" id="email" autocomplete="email" required maxlength="254"></div>
+        <div class="mb-3"><label class="form-label" for="email" id="identity-label">Username or email</label><input class="form-control" type="text" id="email" autocomplete="username" autocapitalize="none" spellcheck="false" required maxlength="254"></div>
         <div id="password-group" class="mb-3"><label class="form-label" for="password">Password</label><input class="form-control" type="password" id="password" autocomplete="current-password" required></div>
         <button id="submit-auth" class="btn btn-primary" type="submit" disabled>Sign in</button>
       </form>
-      <button class="btn btn-link px-0 mt-3" type="button" data-mode="reset">Forgot your password?</button>
+      <p class="text-secondary mt-3">Forgot your username password? Contact the site owner. Email recovery is available only for accounts with a real email address.</p>
+      <button class="btn btn-link px-0 mt-3" type="button" data-mode="reset">Reset password using email</button>
     </div>
     <section id="member" hidden>
       <h2 class="h5">Welcome, <span id="member-name"></span></h2>

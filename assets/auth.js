@@ -13,6 +13,7 @@
     report("Sign-in is not available yet. Please try again later.", true);
     return;
   }
+  const usernameDomain = "@users.vranisch.github.io";
   let client;
   let mode = "login";
   const render = session => {
@@ -23,8 +24,10 @@
     el("guest").hidden = !!session;
     el("member").hidden = !session;
     el("password-form").hidden = !session;
-    el("member-name").textContent = session?.user.user_metadata?.display_name || "member";
-    el("member-email").textContent = session?.user.email || "";
+    const email = session?.user.email || "";
+    const username = email.endsWith(usernameDomain) ? email.slice(0, -usernameDomain.length) : "";
+    el("member-name").textContent = username || session?.user.user_metadata?.display_name || "member";
+    el("member-email").textContent = username ? `Username: ${username}` : email;
   };
   try {
     client = window.supabase.createClient(config.url, config.publishableKey);
@@ -43,6 +46,9 @@
     const labels = { login: "Sign in", reset: "Send reset link" };
     el("form-title").textContent = labels[mode];
     el("submit-auth").textContent = labels[mode];
+    el("identity-label").textContent = mode === "reset" ? "Email" : "Username or email";
+    el("email").type = mode === "reset" ? "email" : "text";
+    el("email").autocomplete = mode === "reset" ? "email" : "username";
     el("password-group").hidden = mode === "reset";
     el("password").required = mode !== "reset";
     el("password").minLength = 1;
@@ -68,7 +74,16 @@
   setMode("login");
   el("auth-form").addEventListener("submit", event => {
     event.preventDefault();
-    const email = el("email").value.trim();
+    const identity = el("email").value.trim().toLowerCase();
+    if (mode === "login" && !identity.includes("@") && !/^[a-z0-9_]{3,32}$/.test(identity)) {
+      report("Use a username with 3–32 Latin letters, numbers or underscores.", true);
+      return;
+    }
+    const email = identity.includes("@") ? identity : identity + usernameDomain;
+    if (mode === "reset" && (!identity.includes("@") || email.endsWith(usernameDomain))) {
+      report("For username accounts, contact the site owner to reset your password.", true);
+      return;
+    }
     const password = el("password").value;
     const submittedMode = mode;
     run(event.currentTarget, async () => {
