@@ -28,6 +28,7 @@
     const username = email.endsWith(usernameDomain) ? email.slice(0, -usernameDomain.length) : "";
     el("member-name").textContent = username || session?.user.user_metadata?.display_name || "member";
     el("member-email").textContent = username ? `Username: ${username}` : email;
+    el("student-links").hidden = username !== "dominiki";
   };
   try {
     client = window.supabase.createClient(config.url, config.publishableKey);
